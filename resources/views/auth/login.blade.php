@@ -10,9 +10,8 @@
         <br>
         <h1>Bienvenido de nuevo</h1>
         <p>Accede a tu cuenta para participar en el foro</p>
+
         <form action="">
-
-
             <div class="flexcolum">
                 <div class="inputForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -24,7 +23,7 @@
                 </div>
             </div>
 
-            <br></br>
+            <p></p>
             <div class="flexcolum">
                 <div class="inputForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -37,9 +36,9 @@
             </div>
 
             <br></br>
-            <a href="#!">¿Olvidaste tu contraseña?</a>
+            <a href="#!" class="left-txt">¿Olvidaste tu contraseña?</a>
             <br></br>
-            <button>
+            <button class="button-blue">
                 <!-- <div class="svg-wrapper"> -->
                      <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -49,12 +48,12 @@
                     </svg>
 <!-- 
                 </div> -->
-             Iniciar sesion</span>
+             Iniciar sesión</span>
             </button>
             <br></br>
             <a href="#!">¿No tienes una cuenta?</a>
             <br></br>
-            <button>Crear cuenta</button>
+            <button class="button-cc">Crear una cuenta nueva -></button>
         </form>
     </div>
 </div>
