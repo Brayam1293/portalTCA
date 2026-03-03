@@ -11,7 +11,8 @@
         <h1>Bienvenido de nuevo</h1>
         <p>Accede a tu cuenta para participar en el foro</p>
 
-        <form action="">
+        <form id="loginForm" method="POST">
+            @csrf
             <div class="flexcolum">
                 <div class="inputForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -19,7 +20,7 @@
                         <path
                             d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                     </svg>
-                    <input class="input" type="email" name="correo" placeholder="Correo electrónico" require>
+                    <input class="input" type="email" name="email" placeholder="Correo electrónico" require>
                 </div>
             </div>
 
@@ -34,11 +35,14 @@
                     <input class="input" type="password" name="password" placeholder="Contraseña" require>
                 </div>
             </div>
+            <br>
+
+            <div id="loginMessage" class="text-danger mt-2"></div>
 
             <br></br>
             <a href="#!" class="left-txt">¿Olvidaste tu contraseña?</a>
             <br></br>
-            <button class="button-blue">
+            <button class="button-blue" type="submit">
                 <!-- <div class="svg-wrapper"> -->
                      <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
