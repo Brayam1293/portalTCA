@@ -22,3 +22,13 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::post('/login', [AuthController::class, 'login']);
+
+// otp
+Route::get('/otp', function () {
+    return view('otp');
+});
+
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+
+// reenviar codigo
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
