@@ -6,31 +6,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        // Autentica al usuario con usuario y contraseña
         if (Auth::attempt([
             'usuario' => $request->email,
             'password' => $request->password
         ])) {
+            // Obtiene el usuario autenticado
             $user = User::where('usuario', $request->email)->first();
 
-            
+            // Genera la OTP de 6 dígitos
             $otp = rand(100000, 999999);
 
-            
+            // Guarda OTP y tiempo de expiración
             $user->otp = $otp;
             $user->otp_expires_at = now()->addMinutes(5);
             $user->save();
 
             try {
+                // Envía el OTP al correo
                 Mail::raw("Tu código de verificación es: $otp", function ($message) use ($request) {
                     $message->to($request->email)
                             ->subject('Código de verificación');
                 });
             } catch (\Exception $e) {
+                // Manejo de error si falla el envío de correo
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al enviar correo: ' . $e->getMessage()
@@ -43,14 +48,17 @@ class AuthController extends Controller
             ]);
         }
 
+        // Credenciales incorrectas
         return response()->json([
             'success' => false,
             'message' => 'Credenciales incorrectas'
         ]);
     }
 
+    // Validar la OTP
     public function verifyOtp(Request $request)
     {
+        // Validación básica de datos
         if (!$request->email || !$request->otp) {
             return response()->json([
                 'success' => false,
@@ -58,6 +66,7 @@ class AuthController extends Controller
             ]);
         }
 
+        // Busca usuario por correo
         $user = User::where('usuario', $request->email)->first();
 
         if (!$user) {
@@ -67,8 +76,10 @@ class AuthController extends Controller
             ]);
         }
 
+        // Comparación del OTP
         if ((string)$user->otp === trim($request->otp)) {
 
+            // Verifica si el OTP expiró
             if ($user->otp_expires_at && now()->greaterThan($user->otp_expires_at)) {
                 return response()->json([
                     'success' => false,
@@ -86,6 +97,7 @@ class AuthController extends Controller
             ]);
         }
 
+        // OTP incorrecto
         return response()->json([
             'success' => false,
             'message' => 'Código incorrecto'
@@ -95,6 +107,7 @@ class AuthController extends Controller
     // reenviar codigo
     public function resendOtp(Request $request)
     {
+        // Buscar usuario
         $user = User::where('usuario', $request->email)->first();
 
         if (!$user) {
@@ -112,6 +125,7 @@ class AuthController extends Controller
         $user->save();
 
         try {
+            // Envia nuevo codigo
             Mail::raw("Tu nuevo código es: $otp", function ($message) use ($request) {
                 $message->to($request->email)
                         ->subject('Nuevo código de verificación');
@@ -126,5 +140,137 @@ class AuthController extends Controller
         return response()->json([
             'success' => true
         ]);
+    }
+
+    public function showForgot()
+    {
+        // Solo limpiar si NO viene de OTP verificado
+        if (!session('otp_verified')) {
+            session()->forget(['reset_user_id', 'reset_email']);
+        }
+
+        return view('forget_password');
+    }
+
+    // Enviar OTP para cambiar contraseña
+    public function sendOtp(Request $request)
+    {
+        $request->validate([
+            'usuario' => 'required|email'
+        ]);
+
+        // Buscar usuario
+        $user = User::where('usuario', $request->usuario)->first();
+
+        if (!$user) {
+            return back()->with('error', 'El correo no existe');
+        }
+
+        // Generar OTP aleatorio
+        $otp = rand(100000, 999999);
+
+        $user->otp = $otp;
+        $user->otp_expires_at = now()->addMinutes(5);
+        $user->save();
+
+        // Guardar sesión
+        session([
+            'reset_user_id' => $user->id,
+            'reset_email' => $user->usuario,
+            'otp_verified' => false
+        ]);
+        session()->save();
+
+        // Enviar correo
+        Mail::raw("Tu código OTP es: $otp", function ($message) use ($request) {
+            $message->to($request->usuario)
+                    ->subject('Recuperación de contraseña');
+        });
+
+        return redirect('/otp')->with('success', 'Se envió el OTP');
+    }
+
+    // Validar OTP
+    public function verifyOtpReset(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required'
+        ]);
+
+        $userId = session('reset_user_id');
+
+        // Validar sesion
+        if (!$userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sesión expirada'
+            ]);
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ]);
+        }
+
+        // Comparacion OTP
+        if ((string)$user->otp !== trim((string)$request->otp)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP incorrecto'
+            ]);
+        }
+
+        // Validar expiración de OTP
+        if (now()->gt($user->otp_expires_at)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP expirado'
+            ]);
+        }
+
+        // Marcar como verificado
+        session(['otp_verified' => true]);
+
+        session()->save();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    // Cambiar contraseña en BD
+    public function resetPassword(Request $request)
+    {
+        // Mensajes para validar la informacion de los campos
+        $request->validate([
+            'password' => 'required|min:6|confirmed'
+        ], [
+            'password.required' => 'La contraseña es obligatoria',
+            'password.min' => 'Debe contener minimo 6 caracteres',
+            'password.confirmed' => 'Deben ser iguales'
+        ]);
+
+        $user = User::find(session('reset_user_id'));
+
+        // Validar sesión y OTP
+        if (!$user || !session('otp_verified')) {
+            return redirect('/forgot-password')->with('error', 'Proceso inválido');
+        }
+
+        // Cambiar solo al usuario selecionado
+        $user->password = Hash::make($request->password);
+        // Limpia la OTP
+        $user->otp = null;
+        $user->otp_expires_at = null;
+        $user->save();
+
+        // Limpiar sesión
+        session()->forget(['reset_user_id', 'otp_verified']);
+
+        return redirect('/login')->with('success', 'Contraseña actualizada');
     }
 }

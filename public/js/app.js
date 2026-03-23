@@ -71,7 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailHidden = document.getElementById("emailHidden");
     // Si existe, le asigna el email guardado
     if (emailHidden) {
-        const email = localStorage.getItem("email");
+        let email = localStorage.getItem("email");
+
+        // Si no viene del login, usar el de sesión (Blade)
+        if (!email) {
+            email = emailHidden.value;
+        }
         emailHidden.value = email;
     }
     
@@ -85,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
         otpForm.addEventListener("submit", async (e) => {
             console.log("Entro al otp");
 
-            // Detecta cuando el usuario envía el código OTP
             e.preventDefault();
 
             // Obtiene los datos del formulario
@@ -93,12 +97,25 @@ document.addEventListener("DOMContentLoaded", () => {
             // Elemento donde se muestran mensajes
             const mensaje = document.getElementById("otpMessage");
 
-            const email = localStorage.getItem("email");
-            datos.append("email", email);
+            let email = localStorage.getItem("email");
+
+            // Si no hay email en localStorage, es flujo de recuperación
+            if (!email) {
+                email = document.getElementById("emailHidden")?.value || null;
+            }
+
+            if (email) {
+                datos.append("email", email);
+            }
 
             try {
-                // Envía el código OTP al backend para validación
-                const response = await fetch("/verify-otp", {
+                // Detectar si es flujo de recuperación
+                const isResetFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email");
+
+                // Determinar endpoint
+                const url = isResetFlow ? "/verify-otp-reset" : "/verify-otp";
+                // Validar OTP
+                const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": document
@@ -113,10 +130,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Si el código es correcto
                 if (json.success) {
-                    // Limpia el email almacenado
+                    const isResetFlow = !localStorage.getItem("email");
+
                     localStorage.removeItem("email");
-                    // Redirige al dashboard
-                    window.location.href = "/dashboard";
+                    if (isResetFlow) {
+                        window.location.href = "/forgot-password";
+                    } else {
+                        window.location.href = "/dashboard";
+                    }
+
                 } else {
                     // En caso de error muestra el error
                     mensaje.innerText = json.message;
@@ -139,8 +161,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const mensaje = document.getElementById("resendMessage");
             mensaje.innerText = "Enviando...";
 
-            // Obtiene el email guardado
-            const email = localStorage.getItem("email");
+            let email = localStorage.getItem("email");
+
+            // Si no hay email en localStorage, usar el hidden (recuperación)
+            if (!email) {
+                email = document.getElementById("emailHidden")?.value;
+            }
 
             try {
                 // Solicita al servidor generar y enviar nuevo OTP

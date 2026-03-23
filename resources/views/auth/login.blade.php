@@ -40,7 +40,7 @@
             <div id="loginMessage" class="text-danger mt-2"></div>
 
             <br></br>
-            <a href="#!" class="left-txt">¿Olvidaste tu contraseña?</a>
+            <a href="/forgot-password" class="left-txt">¿Olvidaste tu contraseña?</a>
             <br></br>
             <button class="button-blue" type="submit">
                 <!-- <div class="svg-wrapper"> -->
