@@ -32,3 +32,12 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
 // reenviar codigo
 Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+
+// olvide contraseña
+Route::get('/forgot-password', [AuthController::class, 'showForgot']);
+Route::post('/forgot-password', [AuthController::class, 'sendOtp']);
+
+// Verificar otp para reset password
+Route::post('/verify-otp-reset', [AuthController::class, 'verifyOtpReset']);
+
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
