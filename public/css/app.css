@@ -1041,6 +1041,18 @@ form {
   border-radius: 10px;
   gap: 8px;
   margin: 0 auto;
+  user-select: none;
+}
+.newcomment,
+.newcomment * {
+  user-select: none;
+}
+.newcomment:active {
+  background-color: #FF2056;
+  transform: none;
+}
+.newcomment:focus {
+  outline: none; 
 }
 .newcomment p {
   margin: 0;
@@ -1051,7 +1063,9 @@ form {
 }
 .categories.txt-white {
   color: white;
+  background: #FF2056;
   font-family: "Inter", sans-serif;
+  background: #FF2056;
   font-size: 1em;
   text-align: center;
   padding: 0px;
@@ -1159,4 +1173,104 @@ form {
     gap: 6px;
     padding: 10px;
   }
+}
+
+/* formulario nuevo comentario */
+
+.newcommentform {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99999; 
+    justify-content: center; 
+    align-items: center;     
+    backdrop-filter: blur(5px); 
+}
+.modal-content {
+    background-color: #ffffff !important;
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+  border-radius: 16px !important;
+    overflow: hidden;    
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+.textp {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: #111827;
+}
+.comentsform {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+    text-align: left;
+}
+.comentsform label {
+    font-size: 0.875rem;      
+    color: #374151;           
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+.comentsform textarea {
+    min-height: 120px;        
+    resize: none;            
+}
+.comentsform input,
+.comentsform textarea,
+.comentsform select {
+  border-radius: 7px;
+  padding: 5px;
+}
+.comentsform input:focus, 
+.comentsform select:focus, 
+.comentsform textarea:focus {
+    outline: none;
+    border-radius: 7px;
+    border-color: #FF2056; 
+    box-shadow: 0 0 0 2px rgba(255, 32, 86, 0.1);
+}
+.comentsform button[type="submit"] {
+    background-color: #FF2056;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(255, 32, 86, 0.2);
+    transition: background 0.2s;
+}
+.comentsform button[type="submit"]:hover {
+    background-color: #e61b4e;
+}
+.btn-cancelar {
+background-color: #F3F4F6; 
+    color: #4B5563;           
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.btn-cancelar:hover {
+    background-color: #E5E7EB;
+}
+.btn-cancelar:active {
+    transform: scale(0.98);    
+    background-color: #D1D5DB;
 }

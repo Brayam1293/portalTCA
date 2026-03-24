@@ -24,6 +24,29 @@ document.addEventListener("DOMContentLoaded", () => {
         card.classList.toggle("liked");
     });
 
+    // CATEGORIAS PARA COMENTARIOS
+    const modal = document.getElementById('newcommentform');
+    const btn = document.querySelector('.newcomment');
+    const closeElements = document.querySelectorAll('.close, #btnCancelar');
+l
+    if (modal && btn) {
+        btn.onclick = () => {
+            modal.style.display = 'flex';
+        };
+
+        closeElements.forEach(el => {
+            el.onclick = () => {
+                modal.style.display = 'none';
+            };
+        });
+
+        window.onclick = (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+
     // Login
     const formLogin = document.getElementById("loginForm");
     if (formLogin) {
@@ -47,17 +70,14 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await fetch("/login", {
                     method: "POST",
-                    headers: { 
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content") 
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     },
                     body: datos
                 });
                 const json = await response.json();
                 if (json.success) {
-                    const email = formLogin.querySelector("[name='email']").value;
-                    localStorage.setItem("email", email);
-                    localStorage.setItem("flow", "login");
-
+                    localStorage.setItem("email", formLogin.querySelector("[name='email']").value);
                     window.location.href = "/otp";
                 } else {
                     mensaje.innerText = json.message;
@@ -70,10 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // OTP
     const otpForm = document.getElementById("otpForm");
-
-    const flow = document.getElementById("flow")?.value || localStorage.getItem("flow");
-
-    // Valida si existe en la página
     if (otpForm) {
         otpForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -83,53 +99,20 @@ document.addEventListener("DOMContentLoaded", () => {
             if (email) datos.append("email", email);
 
             try {
-                // Detectar si es flujo de recuperación, login o registro
-                let url = "/verify-otp";
-
-                if (flow === "register") {
-                    url = "/verify-otp-register";
-                } else if (flow === "reset") {
-                    url = "/verify-otp-reset";
-                } else {
-                    url = "/verify-otp";
-                }
-
-                // Validar OTP
+                const isResetFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email");
+                const url = isResetFlow ? "/verify-otp-reset" : "/verify-otp";
                 const response = await fetch(url, {
                     method: "POST",
-                    headers: { 
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content") 
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     },
                     body: datos
                 });
                 const json = await response.json();
 
                 if (json.success) {
-                    const isRegisterFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email") && !document.getElementById("emailHidden")?.value;
-
-                    const isResetFlow = !localStorage.getItem("email") && document.getElementById("emailHidden")?.value;
-
-                    let url = "/verify-otp";
-
-                    if (isRegisterFlow) {
-                        url = "/verify-otp-register";
-                    } else if (isResetFlow) {
-                        url = "/verify-otp-reset";
-                    }
-
                     localStorage.removeItem("email");
-                    if (flow === "register") {
-                        localStorage.removeItem("flow");
-                        window.location.href = "/login";
-                    } 
-                    else if (flow === "reset") {
-                        window.location.href = "/forgot-password";
-                    } 
-                    else {
-                        localStorage.removeItem("flow");
-                        window.location.href = "/dashboard";
-                    }
-
+                    window.location.href = isResetFlow ? "/forgot-password" : "/dashboard";
                 } else {
                     mensaje.innerText = json.message;
                 }
@@ -148,15 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let email = localStorage.getItem("email") || document.getElementById("emailHidden")?.value;
 
             try {
-                // Solicita al servidor generar y enviar nuevo OTP
-                let url = "/resend-otp";
-
-                // Si es registro
-                if (flow === "register") {
-                    url = "/resend-otp-register";
-                }
-
-                const response = await fetch(url, {
+                const response = await fetch("/resend-otp", {
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
@@ -168,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (json.success) {
                     mensaje.innerText = "Se volvió a enviar el código";
                     resendBtn.disabled = true;
-                    setTimeout(() => { resendBtn.disabled = false; }, 60000);
+                    setTimeout(() => { resendBtn.disabled = false; }, 30000);
                 } else {
                     mensaje.innerText = json.message;
                 }
