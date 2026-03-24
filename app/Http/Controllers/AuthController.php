@@ -13,10 +13,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // Autentica al usuario con usuario y contraseña
-        if (Auth::attempt([
-            'usuario' => $request->email,
-            'password' => $request->password
-        ])) {
+        $user = User::where('usuario', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
             // Obtiene el usuario autenticado
             $user = User::where('usuario', $request->email)->first();
 
@@ -27,6 +26,11 @@ class AuthController extends Controller
             $user->otp = $otp;
             $user->otp_expires_at = now()->addMinutes(5);
             $user->save();
+
+            // Guardar usuario temporal en sesión
+            session([
+                'otp_user_id' => $user->id
+            ]);
 
             try {
                 // Envía el OTP al correo
@@ -86,6 +90,8 @@ class AuthController extends Controller
                     'message' => 'El código expiró'
                 ]);
             }
+
+            Auth::login($user);
 
             // limpiar OTP
             $user->otp = null;
@@ -379,5 +385,16 @@ class AuthController extends Controller
         return response()->json([
             'success' => true
         ]);
+    }
+
+    // Cerrar Sesion
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }

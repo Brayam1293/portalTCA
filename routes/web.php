@@ -56,4 +56,7 @@ Route::post('/resend-otp-register', [AuthController::class, 'resendOtpRegister']
 // foro
 Route::get('/foro', function () {
     return view('foro.foro');
-})->name('foro');
+})->middleware('auth')->name('foro');
+
+// cerrar sesion
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

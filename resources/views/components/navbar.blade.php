@@ -25,6 +25,13 @@
         <li><a href="{{ request()->is('/') ? '#sintomas' : route('home') . '#sintomas' }}" class="nav_link">Síntomas</a></li>
     <li>
       
+      @auth
+      <form action="/logout" method="POST" style="display:inline;">
+          @csrf
+          <button type="submit">Cerrar sesión</button>
+      </form>
+      @endauth
+
       <a class="search" href= "#">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6A7282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
           <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>
