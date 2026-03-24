@@ -46,11 +46,15 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `usuarios` (
+CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuario` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `tipo_usuario` int NOT NULL DEFAULT '1',
+  `otp` varchar(6) DEFAULT NULL,
+  `otp_expires_at` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_tipo_usuario` FOREIGN KEY (`id`) REFERENCES `tipo_usuarios` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
