@@ -50,3 +50,8 @@ Route::get('/registro', [AuthController::class, 'showRegister']);
 Route::post('/registro', [AuthController::class, 'register']);
 Route::post('/verify-otp-register', [AuthController::class, 'verifyOtpRegister']);
 Route::post('/resend-otp-register', [AuthController::class, 'resendOtpRegister']);
+
+// foro
+Route::get('/foro', function () {
+    return view('foro.foro');
+})->name('foro');

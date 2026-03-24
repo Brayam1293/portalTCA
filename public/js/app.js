@@ -112,7 +112,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (json.success) {
                     localStorage.removeItem("email");
-                    window.location.href = isResetFlow ? "/forgot-password" : "/dashboard";
+                    if (flow === "register") {
+                        localStorage.removeItem("flow");
+                        window.location.href = "/login";
+                    } 
+                    else if (flow === "reset") {
+                        window.location.href = "/forgot-password";
+                    } 
+                    else {
+                        localStorage.removeItem("flow");
+                        window.location.href = "/foro";
+                    }
+
                 } else {
                     mensaje.innerText = json.message;
                 }
