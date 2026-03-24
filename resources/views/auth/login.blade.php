@@ -1,9 +1,6 @@
 @extends('layouts.app')
-
 @section('title', 'Login')
-
 @section('content')
-
 
 <div class="form-login">
     <div class="form-login-under">
@@ -11,8 +8,7 @@
         <h1>Bienvenido de nuevo</h1>
         <p>Accede a tu cuenta para participar en el foro</p>
 
-        <form id="loginForm" method="POST">
-            @csrf
+        <form action="">
             <div class="flexcolum">
                 <div class="inputForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -35,28 +31,23 @@
                     <input class="input" type="password" name="password" placeholder="Contraseña" required>
                 </div>
             </div>
+
             <br>
-
-            <div id="loginMessage" class="text-danger mt-2"></div>
-
-            <br></br>
             <a href="/forgot-password" class="left-txt">¿Olvidaste tu contraseña?</a>
-            <br></br>
-            <button class="button-blue" type="submit">
-                <!-- <div class="svg-wrapper"> -->
-                     <span>
+            <br>
+            <button class="button-blue">
+                <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-lock" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
                             d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3" />
                     </svg>
-<!-- 
-                </div> -->
-             Iniciar sesión</span>
+                    Iniciar sesión
+                </span>
             </button>
-            <br></br>
+            <br>
             <a href="#!">¿No tienes una cuenta?</a>
-            <br></br>
+            <br>
             <button class="button-cc">Crear una cuenta nueva -></button>
         </form>
     </div>

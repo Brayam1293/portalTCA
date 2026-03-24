@@ -16,7 +16,10 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+Route::get('/foro', function () {
+    return view('foro.foro');
+})->name('foro');
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
