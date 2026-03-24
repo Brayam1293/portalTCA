@@ -12,6 +12,7 @@
         @csrf
 
         <input type="hidden" name="email" id="emailHidden" value="{{ session('reset_email') }}">
+        <input type="hidden" id="flow" value="{{ session('flow') }}">
 
         <input type="text" name="otp" placeholder="Introducir codigo" required>
         <button type="submit">Validar</button>

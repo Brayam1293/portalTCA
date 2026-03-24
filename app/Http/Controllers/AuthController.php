@@ -187,7 +187,7 @@ class AuthController extends Controller
                     ->subject('Recuperación de contraseña');
         });
 
-        return redirect('/otp')->with('success', 'Se envió el OTP');
+        return redirect('/otp')->with('flow', 'reset');
     }
 
     // Validar OTP
@@ -272,5 +272,112 @@ class AuthController extends Controller
         session()->forget(['reset_user_id', 'otp_verified']);
 
         return redirect('/login')->with('success', 'Contraseña actualizada');
+    }
+
+    public function showRegister()
+    {
+        return view('registro');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'usuario' => 'required|email|unique:users,usuario',
+            'password' => 'required|min:6'
+        ]);
+
+        $otp = rand(100000, 999999);
+
+        // Guardar en sesión (NO en BD aún)
+        session([
+            'register_email' => $request->usuario,
+            'register_password' => Hash::make($request->password),
+            'register_otp' => $otp,
+            'register_otp_expires' => now()->addMinutes(5)
+        ]);
+
+        session()->save();
+
+        // Enviar OTP
+        Mail::raw("Tu código OTP es: $otp", function ($message) use ($request) {
+            $message->to($request->usuario)
+                    ->subject('Registro de cuenta');
+        });
+
+        return redirect('/otp')->with('flow', 'register');
+    }
+
+    public function verifyOtpRegister(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required'
+        ]);
+
+        if (!session('register_email')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sesión inválida'
+            ]);
+        }
+
+        if ((string)session('register_otp') !== trim((string)$request->otp)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP incorrecto'
+            ]);
+        }
+
+        if (now()->gt(session('register_otp_expires'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP expirado'
+            ]);
+        }
+
+        // Crear usuario
+        User::create([
+            'usuario' => session('register_email'),
+            'password' => session('register_password')
+        ]);
+
+        // Limpiar sesión
+        session()->forget([
+            'register_email',
+            'register_password',
+            'register_otp',
+            'register_otp_expires'
+        ]);
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function resendOtpRegister()
+    {
+        if (!session('register_email')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sesión expirada'
+            ]);
+        }
+
+        $otp = rand(100000, 999999);
+
+        session([
+            'register_otp' => $otp,
+            'register_otp_expires' => now()->addMinutes(5)
+        ]);
+
+        session()->save();
+
+        Mail::raw("Tu nuevo código es: $otp", function ($message) {
+            $message->to(session('register_email'))
+                    ->subject('Nuevo código de registro');
+        });
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 }
