@@ -8,7 +8,9 @@
         <h1>Bienvenido de nuevo</h1>
         <p>Accede a tu cuenta para participar en el foro</p>
 
-        <form action="">
+        <form id="loginForm" method="POST">
+            @csrf
+
             <div class="flexcolum">
                 <div class="inputForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -32,10 +34,12 @@
                 </div>
             </div>
 
+            <div id="loginMessage" class="text-danger mt-2"></div>
+
             <br>
             <a href="/forgot-password" class="left-txt">¿Olvidaste tu contraseña?</a>
             <br>
-            <button class="button-blue">
+            <button type="submit" class="button-blue">
                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-lock" viewBox="0 0 16 16">
@@ -48,7 +52,7 @@
             <br>
             <a href="#!">¿No tienes una cuenta?</a>
             <br></br>
-            <button class="button-cc" onclick="window.location.href='/registro'">Crear una cuenta nueva -></button>
+            <button type="button" class="button-cc" onclick="window.location.href='/registro'">Crear una cuenta nueva -></button>
         </form>
     </div>
 </div>
