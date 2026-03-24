@@ -32,6 +32,8 @@ class AuthController extends Controller
                 'otp_user_id' => $user->id
             ]);
 
+            session()->save();
+
             try {
                 // Envía el OTP al correo
                 Mail::raw("Tu código de verificación es: $otp", function ($message) use ($request) {
@@ -62,6 +64,8 @@ class AuthController extends Controller
     // Validar la OTP
     public function verifyOtp(Request $request)
     {
+        \Log::info(session()->all());
+
         // Validación básica de datos
         if (!$request->email || !$request->otp) {
             return response()->json([
