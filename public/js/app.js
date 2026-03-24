@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById('newcommentform');
     const btn = document.querySelector('.newcomment');
     const closeElements = document.querySelectorAll('.close, #btnCancelar');
-l
+
     if (modal && btn) {
         btn.onclick = () => {
             modal.style.display = 'flex';
