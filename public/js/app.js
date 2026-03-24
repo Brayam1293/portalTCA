@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await fetch("/login", {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: {
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     },
@@ -115,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const url = isResetFlow ? "/verify-otp-reset" : "/verify-otp";
                 const response = await fetch(url, {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: {
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                     },
@@ -164,6 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await fetch("/resend-otp", {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: {
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
                         "Content-Type": "application/json"
