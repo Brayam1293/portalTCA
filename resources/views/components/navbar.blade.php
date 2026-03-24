@@ -8,15 +8,23 @@
     </a>
   </div>
 
+    <!-- Botón hamburguesa responsive -->
+    <div class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 
-  <ul>
-    <li><a href="" class="nav_link">Inicio</a></li>
-    <li><a href="" class="nav_link">Sobre TCA</a></li>
+
+  <ul class="nav-links">
+    <li><a href="{{ request()->is('/') ? '#inicio' : route('home') }}" class="nav_link">Inicio</a></li>
+    <li><a href="{{ request()->is('/') ? '#abouttca' : route('home') . '#abouttca' }}" class="nav_link">Sobre TCA</a></li>
     <li><a href="" class="nav_link fz">Test</a></li>
-    <li><a href="" class="nav_link">Foro</a></li>
-    <li><a href="" class="nav_link">Tipos</a></li>
-    <li><a href="" class="nav_link">Sintomas</a></li>
+    <li><a href="{{ route('foro') }}" class="nav_link">Foro</a></li>
+    <li><a href="{{ request()->is('/') ? '#tipos' : route('home') . '#tipos' }}" class="nav_link">Tipos</a></li>
+        <li><a href="{{ request()->is('/') ? '#sintomas' : route('home') . '#sintomas' }}" class="nav_link">Síntomas</a></li>
     <li>
+      
       <a class="search" href= "#">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6A7282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
           <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>
