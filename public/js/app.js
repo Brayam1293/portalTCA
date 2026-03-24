@@ -77,6 +77,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                     body: datos
                 });
+
+                if (response.status === 429) {
+                    if (mensaje) {
+                        mensaje.innerText = "Demasiados intentos. Intenta de nuevo en 1 minuto.";
+                        mensaje.classList.add("text-danger");
+                    }
+                    return;
+                }
+                
                 const json = await response.json();
                 if (json.success) {
                     localStorage.setItem("email", formLogin.querySelector("[name='email']").value);
@@ -111,6 +120,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                     body: datos
                 });
+
+                if (response.status === 429) {
+                    if (mensaje) {
+                        mensaje.innerText = "Demasiados intentos. Espera un momento antes de intentar de nuevo.";
+                    }
+                    return;
+                }
+
                 const json = await response.json();
 
                 if (json.success) {
