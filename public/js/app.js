@@ -20,9 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Botón de like foro
     const card = document.querySelector(".lucide-heart");
-    card.addEventListener("click", () => {
-        card.classList.toggle("liked");
-    });
+    if (card) {
+        card.addEventListener("click", () => {
+            card.classList.toggle("liked");
+        });
+    }
 
     // CATEGORIAS PARA COMENTARIOS
     const modal = document.getElementById('newcommentform');
@@ -91,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // OTP
     const otpForm = document.getElementById("otpForm");
     if (otpForm) {
+        const flow = document.getElementById("flow")?.value || localStorage.getItem("flow");
         otpForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const datos = new FormData(otpForm);
