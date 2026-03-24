@@ -47,8 +47,8 @@
             </button>
             <br>
             <a href="#!">¿No tienes una cuenta?</a>
-            <br>
-            <button class="button-cc">Crear una cuenta nueva -></button>
+            <br></br>
+            <button class="button-cc" onclick="window.location.href='/registro'">Crear una cuenta nueva -></button>
         </form>
     </div>
 </div>

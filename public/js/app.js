@@ -54,7 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 const json = await response.json();
                 if (json.success) {
-                    localStorage.setItem("email", formLogin.querySelector("[name='email']").value);
+                    const email = formLogin.querySelector("[name='email']").value;
+                    localStorage.setItem("email", email);
+                    localStorage.setItem("flow", "login");
+
                     window.location.href = "/otp";
                 } else {
                     mensaje.innerText = json.message;
@@ -67,6 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // OTP
     const otpForm = document.getElementById("otpForm");
+
+    const flow = document.getElementById("flow")?.value || localStorage.getItem("flow");
+
+    // Valida si existe en la página
     if (otpForm) {
         otpForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -76,8 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
             if (email) datos.append("email", email);
 
             try {
-                const isResetFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email");
-                const url = isResetFlow ? "/verify-otp-reset" : "/verify-otp";
+                // Detectar si es flujo de recuperación, login o registro
+                let url = "/verify-otp";
+
+                if (flow === "register") {
+                    url = "/verify-otp-register";
+                } else if (flow === "reset") {
+                    url = "/verify-otp-reset";
+                } else {
+                    url = "/verify-otp";
+                }
+
+                // Validar OTP
                 const response = await fetch(url, {
                     method: "POST",
                     headers: { 
@@ -88,8 +105,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 const json = await response.json();
 
                 if (json.success) {
+                    const isRegisterFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email") && !document.getElementById("emailHidden")?.value;
+
+                    const isResetFlow = !localStorage.getItem("email") && document.getElementById("emailHidden")?.value;
+
+                    let url = "/verify-otp";
+
+                    if (isRegisterFlow) {
+                        url = "/verify-otp-register";
+                    } else if (isResetFlow) {
+                        url = "/verify-otp-reset";
+                    }
+
                     localStorage.removeItem("email");
-                    window.location.href = isResetFlow ? "/forgot-password" : "/dashboard";
+                    if (flow === "register") {
+                        localStorage.removeItem("flow");
+                        window.location.href = "/login";
+                    } 
+                    else if (flow === "reset") {
+                        window.location.href = "/forgot-password";
+                    } 
+                    else {
+                        localStorage.removeItem("flow");
+                        window.location.href = "/dashboard";
+                    }
+
                 } else {
                     mensaje.innerText = json.message;
                 }
@@ -108,7 +148,15 @@ document.addEventListener("DOMContentLoaded", () => {
             let email = localStorage.getItem("email") || document.getElementById("emailHidden")?.value;
 
             try {
-                const response = await fetch("/resend-otp", {
+                // Solicita al servidor generar y enviar nuevo OTP
+                let url = "/resend-otp";
+
+                // Si es registro
+                if (flow === "register") {
+                    url = "/resend-otp-register";
+                }
+
+                const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
@@ -120,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (json.success) {
                     mensaje.innerText = "Se volvió a enviar el código";
                     resendBtn.disabled = true;
-                    setTimeout(() => { resendBtn.disabled = false; }, 30000);
+                    setTimeout(() => { resendBtn.disabled = false; }, 60000);
                 } else {
                     mensaje.innerText = json.message;
                 }
