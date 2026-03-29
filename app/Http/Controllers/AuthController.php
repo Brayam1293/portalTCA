@@ -359,7 +359,7 @@ class AuthController extends Controller
             ]);
         }
 
-        // ✅ Verificar usuario
+        // Verificar usuario
         $user->is_verified = 1;
         $user->otp = null;
         $user->otp_expires_at = null;
