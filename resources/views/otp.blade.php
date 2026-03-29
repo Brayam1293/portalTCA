@@ -11,7 +11,7 @@
     <form id="otpForm" method="POST" action="{{ session('reset_user_id') ? url('/verify-otp-reset') : url('/verify-otp') }}">
         @csrf
 
-        <input type="hidden" name="email" id="emailHidden" value="{{ session('reset_email') }}">
+        <input type="hidden" id="emailHidden" name="email" value="{{ old('usuario') }}">
         <input type="hidden" id="flow" value="{{ session('flow') }}">
 
         <input type="text" name="otp" placeholder="Introducir codigo" required>

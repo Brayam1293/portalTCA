@@ -100,6 +100,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Registro
+    const formRegister = document.getElementById("registerForm");
+
+    if (formRegister) {
+        formRegister.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const email = formRegister.querySelector("[name='usuario']").value;
+
+            localStorage.setItem("email", email);
+            localStorage.setItem("flow", "register");
+
+            formRegister.submit();
+        });
+    }
+
     // OTP
     const otpForm = document.getElementById("otpForm");
     if (otpForm) {
@@ -108,12 +124,26 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             const datos = new FormData(otpForm);
             const mensaje = document.getElementById("otpMessage");
-            let email = localStorage.getItem("email") || document.getElementById("emailHidden")?.value || null;
-            if (email) datos.append("email", email);
+            let email = localStorage.getItem("email");
+
+            if (!email) {
+                email = document.getElementById("emailHidden")?.value;
+            }
+
+            if (email) {
+                datos.append("email", email);
+            }
+            
 
             try {
                 const isResetFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email");
-                const url = isResetFlow ? "/verify-otp-reset" : "/verify-otp";
+                let url = "/verify-otp";
+
+                if (flow === "register") {
+                    url = "/verify-otp-register";
+                } else if (flow === "reset") {
+                    url = "/verify-otp-reset";
+                }
                 const response = await fetch(url, {
                     method: "POST",
                     credentials: "same-origin",
@@ -161,10 +191,20 @@ document.addEventListener("DOMContentLoaded", () => {
         resendBtn.addEventListener("click", async () => {
             const mensaje = document.getElementById("resendMessage");
             mensaje.innerText = "Enviando...";
-            let email = localStorage.getItem("email") || document.getElementById("emailHidden")?.value;
+            let email = localStorage.getItem("email");
+
+            if (!email) {
+                email = document.getElementById("emailHidden")?.value;
+            }
 
             try {
-                const response = await fetch("/resend-otp", {
+                let url = "/resend-otp";
+
+                    if (localStorage.getItem("flow") === "register") {
+                        url = "/resend-otp-register";
+                    }
+
+                    const response = await fetch(url, {
                     method: "POST",
                     credentials: "same-origin",
                     headers: {
