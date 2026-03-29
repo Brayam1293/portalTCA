@@ -298,91 +298,97 @@ class AuthController extends Controller
 
         $otp = rand(100000, 999999);
 
-        // Guardar en sesión (NO en BD aún)
-        session([
-            'register_email' => $request->usuario,
-            'register_password' => Hash::make($request->password),
-            'register_otp' => $otp,
-            'register_otp_expires' => now()->addMinutes(5)
+        // Guardar usuario directamente en BD
+        $user = User::create([
+            'usuario' => $request->usuario,
+            'password' => Hash::make($request->password),
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(5),
+            'is_verified' => 0
         ]);
 
-        session()->save();
-
         // Enviar OTP
-        Mail::raw("Tu código OTP es: $otp", function ($message) use ($request) {
-            $message->to($request->usuario)
-                    ->subject('Registro de cuenta');
-        });
+        try {
+            Mail::raw("Tu código OTP es: $otp", function ($message) use ($request) {
+                $message->to($request->usuario)
+                        ->subject('Registro de cuenta');
+            });
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'Error al enviar correo: ' . $e->getMessage()
+            ]);
+        }
 
         return redirect('/otp')->with('flow', 'register');
     }
 
     public function verifyOtpRegister(Request $request)
     {
-        $request->validate([
-            'otp' => 'required'
-        ]);
-
-        if (!session('register_email')) {
+        if (!$request->email) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sesión inválida'
+                'message' => 'Email no recibido'
             ]);
         }
 
-        if ((string)session('register_otp') !== trim((string)$request->otp)) {
+        $request->validate([
+            'otp' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        $user = User::where('usuario', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ]);
+        }
+
+        if ((string)$user->otp !== trim((string)$request->otp)) {
             return response()->json([
                 'success' => false,
                 'message' => 'OTP incorrecto'
             ]);
         }
 
-        if (now()->gt(session('register_otp_expires'))) {
+        if (now()->gt($user->otp_expires_at)) {
             return response()->json([
                 'success' => false,
                 'message' => 'OTP expirado'
             ]);
         }
 
-        // Crear usuario
-        User::create([
-            'usuario' => session('register_email'),
-            'password' => session('register_password')
-        ]);
-
-        // Limpiar sesión
-        session()->forget([
-            'register_email',
-            'register_password',
-            'register_otp',
-            'register_otp_expires'
-        ]);
+        // ✅ Verificar usuario
+        $user->is_verified = 1;
+        $user->otp = null;
+        $user->otp_expires_at = null;
+        $user->save();
 
         return response()->json([
             'success' => true
         ]);
     }
 
-    public function resendOtpRegister()
+    public function resendOtpRegister(Request $request)
     {
-        if (!session('register_email')) {
+        $user = User::where('usuario', $request->email)->first();
+
+        if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sesión expirada'
+                'message' => 'Usuario no encontrado'
             ]);
         }
 
         $otp = rand(100000, 999999);
 
-        session([
-            'register_otp' => $otp,
-            'register_otp_expires' => now()->addMinutes(5)
-        ]);
+        $user->otp = $otp;
+        $user->otp_expires_at = now()->addMinutes(5);
+        $user->save();
 
-        session()->save();
-
-        Mail::raw("Tu nuevo código es: $otp", function ($message) {
-            $message->to(session('register_email'))
+        Mail::raw("Tu nuevo código es: $otp", function ($message) use ($request) {
+            $message->to($request->email)
                     ->subject('Nuevo código de registro');
         });
 

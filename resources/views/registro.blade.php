@@ -7,7 +7,7 @@
 <div class="container">
     <h2>Crear cuenta</h2>
 
-    <form method="POST" action="/registro">
+    <form method="POST" action="/registro" id="registerForm">
         @csrf
 
         <input type="email" name="usuario" placeholder="Correo" required>
