@@ -284,6 +284,141 @@ form {
   font-style: bold;
 }
 
+
+/* ###############       ############### 
+   ############### OTP ############### 
+   ###############       ############### 
+*/
+.otpctner {
+  background: #F9FAFB; 
+  padding-top: 90px;  
+  scroll-margin-top: 90px;
+  height: 100%;
+}
+/* containers */
+.conotp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#otpForm {
+  width: 35%;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+  border-radius: 5%;
+  box-shadow: rgba(219, 220, 221, 1) 0px 7px 10px 3px;
+  margin: 2%;
+  gap: 10px;
+}
+.continp {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.notec {
+  display: flex;
+  flex-direction: row;
+  background-color: #F1FDFE;
+  border: 1px solid #D9FAFC;
+  border-radius: 10px;
+  height: auto;
+  padding: 15px;
+  gap: 8px;
+  margin: 0;
+}
+.notecd1 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 5px;
+}
+.notecd2 {
+  margin: 0px;
+}
+/* icons */
+.ishield {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #E4FCFD;
+  width: 50px;
+  border-radius: 100%;
+}
+/* Button */
+.vcode {
+  background-color: #BCF7FB;
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-weight: 600;
+  font-size: 0.875em;
+  color: #183133;
+  padding: 20px;
+
+  border-radius: 30px;
+  border: none;
+  width: 100%;
+  margin-top: 20px;
+}
+.vcode:hover {
+  background-color: #C3E3E6;
+  transition: 0.50s;
+  transform: translatey(-4px);
+}
+/* Fonts */
+.title.tforo {
+  font-size: 1.875em;
+  font-weight: 700;
+}
+.sttfr {
+  font-size: 1em;
+  color: #4A5565;
+  font-weight: 400;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+}
+.txtnote.cdv {
+  color: #364153;
+  text-align: left;
+  font-weight: 600;
+}
+.txt-mini.nt {
+  font-family: "Inter", sans-serif;
+  font-size: 0.75em ;
+  color: #4A5565;
+  font-weight: 400;
+  padding: 7px;
+  text-align: left;
+  margin: 0;
+}
+.note-bold {
+  font-weight: 800;
+}
+.ipcdv {
+  border-radius: 10px;
+  color: #6A7282;
+  padding: 12px;
+  border: #D1D5DC 1px solid;
+  text-align: center;
+  font-size: 1.563em;
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+.error-message {
+  color: #FF5252;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  padding: 10px;
+}
+
+
 /* ###############       ############### 
    ############### HOME  ############### 
    ###############       ############### 
