@@ -11,3 +11,17 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 COPY . /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
+
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-install zip
+
+
+
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
+
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache

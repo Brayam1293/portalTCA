@@ -51,6 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
     }
+        //NÚMEROS SOLO VÁLIDOS PARA INPUT OTP  
+    const otps = document.querySelectorAll('.ipcdv');
+
+    otps.forEach(input => {
+    input.addEventListener('input', () => {
+        input.value = input.value.replace(/\D/g, '').slice(0, 6);
+    });
+    });
 
     // Login
     const formLogin = document.getElementById("loginForm");
