@@ -110,52 +110,105 @@
                 <input type="text" class="bi" placeholder="Busca temas en el foro...">
             </div>
             <!-- Contenedor de los comentarios -->
-            <div class="cardcomment">
+            @foreach($temas as $tema)
+            @php
+            $categorias = [
+                1 => 'recuperacion',
+                2 => 'familiares',
+                3 => 'consejos',
+                4 => 'positivismo'
+            ];
+            @endphp
+
+            <div class="cardcomment"
+                data-category="{{ $categorias[$tema->categoria] ?? 'otros' }}"
+                data-user="{{ $tema->id_usuario }}"
+                data-title="{{ strtolower($tema->titulo) }}"
+                data-message="{{ strtolower($tema->mensaje) }}">
                 <div class="ctnertop">
-                    <div class="cc1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none"
-                            stroke="#99A1AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-square-user-round-icon lucide-square-user-round">
-                            <path d="M18 21a6 6 0 0 0-12 0" />
-                            <circle cx="12" cy="11" r="4" />
-                            <rect width="18" height="18" x="3" y="3" rx="2" />
-                        </svg>
-                    </div>
+                    <div class="cc1"></div>
+
                     <div class="cc2">
-                        <h2 class="txt-card-title">Mi primera semana en recuperación: Miedos y esperanzas</h2>
+                        <h2 class="txt-card-title">{{ $tema->titulo }}</h2>
+
                         <div class="uht">
-                            <p class="txt-card-user usn">@Maria_88</p>
-                            <p class="txt-card-user hr">hace 2 horas</p>
+                            <p class="txt-card-user usn">
+                                {{ '@' . ($tema->user->usuario ?? 'Usuario') }}
+                            </p>
+
+                            <p class="txt-card-user hr">
+                                {{ $tema->created_at->diffForHumans() }}
+                            </p>
+
                             <p class="txt-card-user">.</p>
-                            <p class="txt-card-user rn">Recuperación</p>
+
+                            @php
+                            $categoriasNombre = [
+                                1 => 'Recuperación',
+                                2 => 'Familiares',
+                                3 => 'Consejos',
+                                4 => 'Positivismo'
+                            ];
+                            @endphp
+
+                            <p class="txt-card-user rn">
+                                {{ $categoriasNombre[$tema->categoria] ?? 'General' }}
+                            </p>
                         </div>
                     </div>
                 </div>
-                <p class="txt-card-cont">Hola a todos, acabo de empezar mi tratamiento esta semana. Tengo mucho miedo
-                    pero también sé que es lo correcto...</p>
+
+                <p class="txt-card-cont">{{ $tema->mensaje }}</p>
+
                 <hr>
+
                 <div class="card-btm">
-                    <div class="card-btm1 cb1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-heart-icon lucide-heart icons-foro">
-                            <path
-                                d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+                    <div class="card-btm1 cb1 like-btn" data-id="{{ $tema->id_foro }}" style="cursor:pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-heart icons-foro">
+                            <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/>
                         </svg>
-                        <p class="txt-card-mini nber">25</p>
+
+                        <p class="txt-card-mini nber" id="likes-{{ $tema->id_foro }}">
+                            {{ $tema->likes->count() }}
+                        </p>
                     </div>
+
                     <div class="card-btm1 cb2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-message-square-icon lucide-message-square icons-foro">
-                            <path
-                                d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" />
-                        </svg>
-                        <p class="txt-card-mini cms">1 comentarios</p>
-
+                        <p class="txt-card-mini cms toggle-comments" data-id="{{ $tema->id_foro }}" style="cursor:pointer;">
+                            {{ isset($tema->comentarios) ? count($tema->comentarios) : 0 }} comentarios
+                        </p>
                     </div>
 
+                    @auth
+                        @if(auth()->user()->tipo_usuario == 1 || auth()->user()->id == $tema->id_usuario)
+                            <button class="delete-btn" data-id="{{ $tema->id_foro }}">
+                                Eliminar
+                            </button>
+                        @endif
+                    @endauth
+                </div>
+
+                <div class="comentarios-box" id="comentarios-{{ $tema->id_foro }}" style="display:none;">
+                    <form action="{{ route('foro.comentar', $tema->id_foro) }}" method="POST">
+                        @csrf
+                        <input type="text" name="comentario" placeholder="Escribe un comentario..." required>
+                        <button type="submit">Comentar</button>
+                    </form>
+
+                    @if(isset($tema->comentarios))
+                        @foreach($tema->comentarios as $comentario)
+                            <p>
+                                <strong>{{ $comentario->usuario->usuario }}</strong>:
+                                {{ $comentario->comentario }}
+                            </p>
+                        @endforeach
+                    @endif
                 </div>
             </div>
+            @endforeach 
         </div>
     </div>

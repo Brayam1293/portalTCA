@@ -8,23 +8,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Categorías en foro
-    const items = document.querySelectorAll(".categories");
-    items.forEach((item) => {
-        item.addEventListener("click", () => {
-            document.querySelector(".categories.active")?.classList.remove("active");
-            item.classList.add("active");
-            console.log("Filtrando por:", item.dataset.category);
+    // Botón de like foro
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            let postId = this.getAttribute('data-id');
+
+            this.classList.toggle("liked");
+
+            fetch(`/foro/${postId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById(`likes-${postId}`).innerText = data.total;
+            });
         });
     });
-
-    // Botón de like foro
-    const card = document.querySelector(".lucide-heart");
-    if (card) {
-        card.addEventListener("click", () => {
-            card.classList.toggle("liked");
-        });
-    }
 
     // CATEGORIAS PARA COMENTARIOS
     const modal = document.getElementById('newcommentform');
@@ -120,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const otpForm = document.getElementById("otpForm");
     if (otpForm) {
         const flow = document.getElementById("flow")?.value || localStorage.getItem("flow");
+
         otpForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const datos = new FormData(otpForm);
@@ -136,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
             
 
             try {
-                const isResetFlow = window.location.pathname.includes("otp") && !localStorage.getItem("email");
                 let url = "/verify-otp";
 
                 if (flow === "register") {
@@ -226,4 +229,100 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // Filtrado
+    const categoriasFiltro = document.querySelectorAll(".categories");
+    const temas = document.querySelectorAll(".cardcomment");
+    const buscador = document.querySelector(".bi");
+
+    if (categoriasFiltro.length && temas.length) {
+
+        let categoriaActual = "todos";
+
+        categoriasFiltro.forEach(cat => {
+            cat.addEventListener("click", function () {
+
+                categoriaActual = this.dataset.category;
+
+                categoriasFiltro.forEach(c => c.classList.remove("active"));
+                this.classList.add("active");
+
+                filtrar();
+            });
+        });
+
+        if (buscador) {
+            buscador.addEventListener("input", filtrar);
+        }
+
+        function filtrar() {
+            const texto = buscador.value.toLowerCase();
+            const userId = document.body.dataset.userid;
+
+            temas.forEach(tema => {
+
+                const categoria = tema.dataset.category;
+                const usuario = tema.dataset.user;
+                const titulo = tema.dataset.title;
+                const mensaje = tema.dataset.message;
+
+                let mostrar = true;
+
+                // Categorias
+                if (categoriaActual !== "todos") {
+
+                    if (categoriaActual === "mis-publicaciones") {
+                        mostrar = usuario == userId;
+                    } else {
+                        mostrar = categoria === categoriaActual;
+                    }
+                }
+
+                // Busqueda
+                if (texto && !(titulo.includes(texto) || mensaje.includes(texto))) {
+                    mostrar = false;
+                }
+
+                tema.style.display = mostrar ? "block" : "none";
+            });
+        }
+    }
+
+    // Mostrar comentarios
+    document.querySelectorAll('.toggle-comments').forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            let id = this.getAttribute('data-id');
+            let box = document.getElementById(`comentarios-${id}`);
+
+            if (box.style.display === "none") {
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
+
+        });
+    });
+
+    // Eliminar temas (ocultar)
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            let postId = this.getAttribute('data-id');
+
+            fetch(`/foro/${postId}/eliminar`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.closest('.cardcomment').remove();
+                }
+            });
+        });
+    });
 });
