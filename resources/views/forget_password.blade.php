@@ -14,12 +14,12 @@
 @if(session('otp_verified'))
 <form method="POST" action="/reset-password">
     @csrf
-    <input type="password" name="password" placeholder="Nueva contraseña" required>
+    <input type="password" name="password" placeholder="Nueva contraseña" minlength="6" maxlength="20" required>
     @error('password')
         <div class="text-danger">{{ $message }}</div>
     @enderror
 
-    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required>
+    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" minlength="6" maxlength="20" required>
     @error('password_confirmation')
         <div class="text-danger">{{ $message }}</div>
     @enderror

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Routing\Middleware\ThrottleRequests;
+use App\Http\Controllers\ForoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,6 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-Route::get('/foro', function () {
-    return view('foro.foro');
-})->name('foro');
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
@@ -54,9 +52,20 @@ Route::post('/verify-otp-register', [AuthController::class, 'verifyOtpRegister']
 Route::post('/resend-otp-register', [AuthController::class, 'resendOtpRegister']);
 
 // foro
-Route::get('/foro', function () {
-    return view('foro.foro');
-})->middleware('auth')->name('foro');
+Route::get('/foro', [ForoController::class, 'index'])
+    ->middleware('auth')
+    ->name('foro');
+
+Route::post('/temas', [ForoController::class, 'store'])
+    ->middleware('auth');
+
+Route::post('/foro/{id}/like', [ForoController::class, 'like'])
+    ->name('foro.like');
+
+Route::post('/foro/{id}/comentario', [ForoController::class, 'comentar'])
+    ->name('foro.comentar');
+
+Route::post('/foro/{id}/eliminar', [ForoController::class, 'eliminar']);
 
 // cerrar sesion
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

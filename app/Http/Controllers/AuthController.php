@@ -230,7 +230,7 @@ class AuthController extends Controller
         if ((string)$user->otp !== trim((string)$request->otp)) {
             return response()->json([
                 'success' => false,
-                'message' => 'OTP incorrecto'
+                'message' => 'Codigo incorrecto'
             ]);
         }
 
@@ -238,7 +238,7 @@ class AuthController extends Controller
         if (now()->gt($user->otp_expires_at)) {
             return response()->json([
                 'success' => false,
-                'message' => 'OTP expirado'
+                'message' => 'Codigo expirado'
             ]);
         }
 

@@ -17,7 +17,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@100..900&display=swap" rel="stylesheet">
 </head>
-<body class="@yield('body-class')">
+<body class="@yield('body-class')" data-userid="{{ auth()->id() }}">
 
     @include('components.navbar')
  
