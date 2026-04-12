@@ -203,6 +203,185 @@ form {
     text-align: right;
   }
 }
+/* ###############        ############### 
+   ############### FOOTER ############### 
+   ###############        ############### 
+*/
+#footer {
+  background-color: #1E2939; 
+  padding-top: 30px;
+  margin: 0;
+  overflow: hidden;
+}
+/* contenedores */
+.confter {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0px 40px;
+}
+.confteru {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  width: 40%;
+}
+.ctnersfu {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 40%;
+}
+.confteru2 {
+  padding: 10px;
+}
+.ctrtop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  gap: 20px;
+  border-top: 1px solid #364153;
+  width: 95%;
+  padding: 30px;
+}
+/* iconos */
+.iconft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+}
+
+/* Textos */
+.txtfo{
+  font-size: 1.25em;
+  color: white;
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-weight: 700;
+  margin: 0;
+}
+.t2fo {
+  font-size: 0.875em;
+  color: #D1D5DC;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+}
+.t2fo.ft {
+  color: #99A1AF;
+  font-size: 0.875em;
+}
+.text-general.graytxt {
+  color: #99A1AF;
+  text-align: left;
+  margin-top: 0;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  padding: 0px 10px 0px 10px;
+}
+.txt-card-mini.nt.ft {
+  color : #6A7282;
+}
+
+
+/* listas */
+.urlpnav li {
+  list-style: none;
+}
+.urlpnav a {
+  text-decoration: none;
+  color: #99A1AF;
+  font-size: 1em;
+  transition: color 0.2s ease;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+}
+.urlpnav {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Responsive  */
+@media (max-width: 900px) {
+
+  .confter {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 0 30px;
+  }
+
+  .confteru,
+  .ctnersfu {
+    width: 100%;
+  }
+
+  .txtfo {
+    font-size: 1.1em;
+  }
+
+  .t2fo,
+  .t2fo.ft {
+    font-size: 0.85em;
+  }
+
+  .text-general.graytxt {
+    font-size: 0.9em;
+    padding: 0;
+  }
+}
+@media (max-width: 600px) {
+
+  #footer {
+    padding-top: 20px;
+  }
+
+  .confter {
+    padding: 0 20px;
+    gap: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+  }
+
+  .confteru,
+  .ctnersfu {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .iconft {
+    justify-content: left;
+  }
+
+  .urlpnav {
+    align-items: flex-start;
+  }
+
+  .urlpnav a {
+    font-size: 0.9em;
+  }
+
+  .text-general.graytxt {
+    text-align: center;
+    padding: 0;
+  }
+
+  .ctrtop {
+    padding: 20px;
+    text-align: center;
+  }
+}
 
 /* ###############       ############### 
    ############### LOGIN ############### 
@@ -1719,6 +1898,7 @@ background-color: #F3F4F6;
 }
 .urlpages li:hover a {
   color: #7DA3A6;
+  text-decoration: underline;
 }
 .urlpages li:hover::before {
   filter: brightness(0.8) saturate(50%); 
@@ -1781,7 +1961,6 @@ background-color: #F3F4F6;
 .resultado-busqueda{
   background:#fff176 !important;
 }
-
 .resultado-activo{
   background:#ff9800 !important;
   box-shadow:0 0 8px rgba(255,152,0,.5);
