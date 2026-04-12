@@ -1710,3 +1710,11 @@ background-color: #F3F4F6;
     font-size: 0.9rem;
   }
 }
+.resultado-busqueda{
+  background:#fff176 !important;
+}
+
+.resultado-activo{
+  background:#ff9800 !important;
+  box-shadow:0 0 8px rgba(255,152,0,.5);
+}

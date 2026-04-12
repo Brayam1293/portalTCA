@@ -4,7 +4,7 @@
 
 <br><br><br><br><br><br><br>
 @if(!session('otp_verified'))
-<form method="POST" action="/forgot-password">
+<form method="POST" action="/forgot-password" id="forgotForm">
     @csrf
     <input type="email" name="usuario" placeholder="Correo" required>
     <button type="submit">Enviar OTP</button>
