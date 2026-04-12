@@ -1,4 +1,4 @@
-<section id="sintomas">
+<section id="Síntomas">
     <div class="ctnsymtoms">
         <div class="ctnsu">
         <h1 class="title">Señales de Alerta</h1>
@@ -27,7 +27,7 @@
                 Cambios de humor, irritabilidad o aislamiento social.
             </li>
             <li class="text-general blue-g">
-                Cambios de humor, irritabilidad o aislamiento social.
+                Sentimientos de culpa o vergüenza después de comer.
             </li>
         </ul>
 

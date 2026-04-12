@@ -1,4 +1,4 @@
-<section id="inicio">
+<section id="Inicio">
 
   <div class="containerhome">
     <div class="contau1">

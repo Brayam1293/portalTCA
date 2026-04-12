@@ -40,6 +40,9 @@ nav {
 .login:hover{
   color: #79EFF8;
 }
+.login-text::after {
+  content: "Entrar";
+}
 .login:hover svg,
 .search:hover svg {
   stroke: #79EFF8;
@@ -77,7 +80,6 @@ li {
   color: #273141;
   font-weight: bold;
   line-height: 1.2;
-  white-space: nowrap; 
 }
 
 /* Logo responsive */
@@ -95,6 +97,7 @@ li {
   background-color: #79EFF7;
   border-radius: 50px;
   padding: 5px 18px;
+  white-space: nowrap;
 }
 .help:hover {
   background-color: #87C8CD;
@@ -135,16 +138,55 @@ form {
   background-color: #333;
   border-radius: 2px;
 }
+/* RESPONSIVE */
+@media (min-width: 900px) and (max-width: 1211px) {
+  .login-text {
+    display: none; 
+  }
+  
+  .login {
+    padding: 8px; 
+  }
+}
+/* tablets */
+@media (max-width: 900px) {
 
-/* MENÚ RESPONSIVE */
-@media screen and (max-width: 768px) {
+  nav {
+    padding: 12px 20px;
+  }
+
+  nav ul {
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 1.05em;
+  }
+
+  .nav_link,
+  .login,
+  .help {
+    font-size: 14px;
+  }
+  .login-text::after {
+    content: "Iniciar sesión";
+  }
+
+  .help {
+    padding: 4px 12px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
   nav ul.nav-links {
     position: absolute;
-    top: 70px; 
+    top: 70px;
     right: 0;
     background-color: white;
     flex-direction: column;
-    width: 200px;
+    width: 220px;
     display: none;
     padding: 20px;
     gap: 15px;
@@ -154,10 +196,6 @@ form {
   }
 
   nav ul.nav-links.active {
-    display: flex;
-  }
-
-  .hamburger {
     display: flex;
   }
 
@@ -417,6 +455,81 @@ form {
   font-family: "Inter", sans-serif;
   padding: 10px;
 }
+.linkident { 
+  margin-top: 20px;
+  color: #617678;
+  font-size: 0.875em;
+  font-family: "Inter", sans-serif;
+  text-decoration: underline;
+}
+.linkident:hover {
+  color: #79EFF7;
+  transition: 0.3s;
+}
+
+
+/* medidas responsivas */
+@media (max-width: 900px) {
+  #otpForm {
+    width: 60%;
+    padding: 4%;
+    border-radius: 20px;
+  }
+
+  .title.tforo {
+    font-size: 1.5em;
+  }
+
+  .ipcdv {
+    font-size: 1.3em;
+  }
+
+  .vcode {
+    font-size: 0.9em;
+    padding: 18px;
+  }
+}
+@media (max-width: 600px) {
+  #otpForm {
+    width: 90%;
+    padding: 6%;
+    border-radius: 15px;
+    margin-top: 20px;
+  }
+
+  .title.tforo {
+    font-size: 1.3em;
+    text-align: center;
+  }
+
+  .sttfr {
+    font-size: 0.9em;
+  }
+
+  .linkident {
+    font-size: 0.80em;
+  }
+
+  .notec {
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .ishield {
+    width: 40px;
+    padding: 8px;
+  }
+
+  .ipcdv {
+    font-size: 1.2em;
+    padding: 10px;
+  }
+
+  .vcode {
+    font-size: 0.85em;
+    padding: 15px;
+  }
+}
 
 
 /* ###############       ############### 
@@ -424,7 +537,7 @@ form {
    ###############       ############### 
 */
 
-#inicio {
+#Inicio {
   background: #EEF9FB; 
   background: linear-gradient(90deg, rgba(238, 249, 251, 1) 0%, rgba(255, 255, 255, 1) 100%);
   padding-top: 90px;
@@ -548,7 +661,7 @@ form {
    ###############           ############### 
 */
 
-#abouttca {
+#Sobre-TCA {
   padding-top: 90px;
   scroll-margin-top: 90px;
 }
@@ -681,7 +794,7 @@ form {
    ############### TIPES ############### 
    ###############       ############### 
 */
-#tipos {
+#Tipos {
   padding-top: 90px;
   scroll-margin-top: 90px;
   background-color: #F9FAFB;
@@ -740,7 +853,6 @@ form {
   font-size: 1.25em;
   font-weight: 700;
   font-family: "Inter", sans-serif;
-  margin-top: -10px;
 }
 @media (max-width: 600px) {
   .text-title-normal {
@@ -869,7 +981,7 @@ form {
   .ctnsu,
   .ctnimg {
     width: 90%;
-    margin: 0 auto;
+    margin: 30px;
   }
 
   .cuadrado {
@@ -888,7 +1000,7 @@ form {
 @media (max-width: 600px) {
   .ctnsymtoms {
     flex-direction: column;
-    gap: 30px;
+    gap: 8px;
   }
 
   .ctnsu,
