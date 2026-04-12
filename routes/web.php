@@ -29,7 +29,7 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,
 
 // otp
 Route::get('/otp', function () {
-    return view('otp');
+    return view('code.otp');
 });
 
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:3,1');

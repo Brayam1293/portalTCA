@@ -165,7 +165,7 @@ class AuthController extends Controller
 
     public function showForgot()
     {
-        return view('forget_password');
+        return view('auth.forget_password');
     }
 
     // Enviar OTP para cambiar contraseña
@@ -293,7 +293,7 @@ class AuthController extends Controller
 
     public function showRegister()
     {
-        return view('registro');
+        return view('auth.registro');
     }
 
     public function register(Request $request)
