@@ -1,4 +1,4 @@
-<section id="tipos">
+<section id="Tipos">
     <div class="ctnertipes">
         <h1 class="title">Tipos Comunes de TCA</h1>
         <p class="txtsubtitles">Existen diferentes formas en las que se manifiestan estos trastornos.</p>

@@ -1,4 +1,4 @@
-<section id="abouttca">
+<section id="Sobre-TCA">
     <div class="contaatca">
         <div class="conttexts">
             <h1 class="text-base blue">COMPRENDIENDO LOS TCA</h1>
