@@ -537,7 +537,7 @@ form {
    ###############       ############### 
 */
 
-#inicio {
+#Inicio {
   background: #EEF9FB; 
   background: linear-gradient(90deg, rgba(238, 249, 251, 1) 0%, rgba(255, 255, 255, 1) 100%);
   padding-top: 90px;
@@ -661,7 +661,7 @@ form {
    ###############           ############### 
 */
 
-#abouttca {
+#Sobre-TCA {
   padding-top: 90px;
   scroll-margin-top: 90px;
 }
@@ -794,7 +794,7 @@ form {
    ############### TIPES ############### 
    ###############       ############### 
 */
-#tipos {
+#Tipos {
   padding-top: 90px;
   scroll-margin-top: 90px;
   background-color: #F9FAFB;
@@ -853,7 +853,6 @@ form {
   font-size: 1.25em;
   font-weight: 700;
   font-family: "Inter", sans-serif;
-  margin-top: -10px;
 }
 @media (max-width: 600px) {
   .text-title-normal {
@@ -982,7 +981,7 @@ form {
   .ctnsu,
   .ctnimg {
     width: 90%;
-    margin: 0 auto;
+    margin: 30px;
   }
 
   .cuadrado {
@@ -1001,7 +1000,7 @@ form {
 @media (max-width: 600px) {
   .ctnsymtoms {
     flex-direction: column;
-    gap: 30px;
+    gap: 8px;
   }
 
   .ctnsu,
@@ -1521,4 +1520,193 @@ background-color: #F3F4F6;
 .btn-cancelar:active {
     transform: scale(0.98);    
     background-color: #D1D5DB;
+}
+/* ###############       ############### 
+   ############### HELP  ############### 
+   ###############       ############### 
+*/
+#Ayuda {
+  background: #F2FAFB; 
+  padding: 70px 20px 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+/* contenedores */
+.ctnerhelp {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto 50px;
+}
+.cardctner {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 10px; 
+  margin-top: 0;
+}
+.ctnm {
+  gap: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.cardne {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center; 
+  padding: 3px 16px; 
+  background-color: #F9FAFB;
+  border-radius: 10px;
+  margin-bottom: 8px; 
+}
+.bold-red {
+  white-space: nowrap; 
+  margin-left: 10px;
+}
+.cntertextl {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  padding: 10px;
+  gap: 15px;
+  margin-top: 10px;
+}
+.cardctner.ch1 { border-top: 5px solid #FB2C36; }
+.cardctner.ch2 { border-top: 5px solid #7FA4A7; }
+
+/* iconos */
+.iconglobe,
+.iconphone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+}
+.iconglobe { background-color: #E5EDED; }
+.iconphone { background-color: #FFE2E2; }
+
+/* textos */
+.title, .txtsubtitles {
+  text-align: center;
+}
+.text-general.bold-blue {
+  color: #101828;
+  font-weight: 600;
+  text-align: left;
+}
+.text-general.bold-red {
+  color: #E7000B;
+  font-weight: 700;
+}
+.text-general.bold-skyblue {
+  color: #155DFC;
+  font-weight: 700;
+}
+.text-general.hs {
+  margin: 0;
+}
+
+/* links */
+.urlpages {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.urlpages a {
+  text-decoration: none;
+  color: #79EFF8;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+}
+.urlpages li::before {
+  content: ""; 
+  display: inline-block; 
+  width: 16px;
+  height: 16px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2379EFF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-right: 8px;
+  vertical-align: middle;
+  transition: filter 0.2s ease; 
+}
+.urlpages li:hover a {
+  color: #7DA3A6;
+}
+.urlpages li:hover::before {
+  filter: brightness(0.8) saturate(50%); 
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+
+  .ctnerhelp {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .cardctner {
+    width: 90%;
+    max-width: 600px;
+  }
+  .cntertextl {
+    gap: 10px;
+  }
+  .text-general.bold-blue,
+  .text-general.bold-red,
+  .text-general.bold-skyblue {
+    font-size: 0.95rem;
+  }
+}
+@media (max-width: 600px) {
+
+  #Ayuda {
+    padding: 50px 15px 0 15px;
+  }
+  .cardctner {
+    width: 100%;
+    padding: 15px;
+  }
+  .cardne {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .cntertextl {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .iconglobe,
+  .iconphone {
+    width: 40px;
+    height: 40px;
+  }
+  .text-general.bold-blue,
+  .text-general.bold-red,
+  .text-general.bold-skyblue {
+    font-size: 0.9rem;
+  }
+  .urlpages a {
+    font-size: 0.9rem;
+  }
 }

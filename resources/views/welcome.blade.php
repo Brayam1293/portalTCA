@@ -6,3 +6,4 @@
 @include('sections.abouttca')
 @include('sections.tipos')
 @include('sections.symptom')
+@include('sections.help')

@@ -1,4 +1,4 @@
-<section id="sintomas">
+<section id="Síntomas">
     <div class="ctnsymtoms">
         <div class="ctnsu">
         <h1 class="title">Señales de Alerta</h1>
