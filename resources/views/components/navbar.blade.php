@@ -17,8 +17,8 @@
 
 
   <ul class="nav-links">
-    <li><a href="{{ request()->is('/') ? '#Inicio' : route('home') }}" class="nav_link">Inicio</a></li>
-    <li><a href="{{ request()->is('/') ? '#Sobre-TCA' : route('home') . '#Sobre-TCA' }}" class="nav_link">Sobre TCA</a></li>
+    <li><a href="{{ request()->is('/') ? '#inicio' : route('home') }}" class="nav_link">Inicio</a></li>
+    <li><a href="{{ request()->is('/') ? '#abouttca' : route('home') . '#abouttca' }}" class="nav_link">Sobre TCA</a></li>
     <li><a href="" class="nav_link fz">Test</a></li>
     <li><a href="{{ route('foro') }}" class="nav_link">Foro</a></li>
     <li><a href="{{ request()->is('/') ? '#tipos' : route('home') . '#tipos' }}" class="nav_link">Tipos</a></li>
@@ -63,13 +63,16 @@
       @endauth
     </li>
     <li>
-      <a class="help" href= "{{ request()->is('/') ? '#Ayuda' : route('home') . '#Ayuda' }}">
+      <a class="help" href= "#">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#183133" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-icon lucide-phone">
           <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>
         </svg>  
-        Ayuda
+      Ayuda
       </a>
     </li>
   </ul>
+
+</nav>
+
 
 </nav>
