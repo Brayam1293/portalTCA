@@ -27,7 +27,7 @@
                 Cambios de humor, irritabilidad o aislamiento social.
             </li>
             <li class="text-general blue-g">
-                Cambios de humor, irritabilidad o aislamiento social.
+                Sentimientos de culpa o vergüenza después de comer.
             </li>
         </ul>
 
