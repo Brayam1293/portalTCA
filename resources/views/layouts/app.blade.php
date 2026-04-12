@@ -20,6 +20,7 @@
 <body class="@yield('body-class')" data-userid="{{ auth()->id() }}">
 
     @include('components.navbar')
+    @include('components.footer')
  
 
     <div class="container">
