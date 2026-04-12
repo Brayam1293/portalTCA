@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use App\Http\Controllers\ForoController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,21 @@ Route::post('/foro/{id}/comentario', [ForoController::class, 'comentar'])
     ->name('foro.comentar');
 
 Route::post('/foro/{id}/eliminar', [ForoController::class, 'eliminar']);
+
+// admin
+Route::get('/admin', [AdminController::class, 'dashboard'])
+->middleware('auth');
+
+Route::post('/admin/update/{id}', [AdminController::class, 'update'])
+->middleware('auth');
+
+Route::post('/admin/delete/{id}', [AdminController::class, 'delete'])
+->middleware('auth');
+
+Route::get('/admin/user/{id}', [AdminController::class, 'view'])
+->middleware('auth');
+
+Route::post('/admin/create', [AdminController::class, 'createUser']);
 
 // cerrar sesion
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

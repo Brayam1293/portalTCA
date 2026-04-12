@@ -100,8 +100,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 const json = await response.json();
                 if (json.success) {
+                    localStorage.clear();
+
                     localStorage.setItem("email", formLogin.querySelector("[name='email']").value);
-                    window.location.href = "/otp";
+                    window.location.href="/otp";
+                } else if(json.disabled){
+                    alert("Tu cuenta está desactivada. Debes recuperarla.");
+                    localStorage.clear();
+
+                    localStorage.setItem("email", formLogin.querySelector("[name='email']").value);
+                    localStorage.setItem("flow", "reset");
+                    window.location.href = "/forgot-password";
                 } else {
                     mensaje.innerText = json.message;
                 }
@@ -120,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const email = formRegister.querySelector("[name='usuario']").value;
 
+            localStorage.clear();
             localStorage.setItem("email", email);
             localStorage.setItem("flow", "register");
 
@@ -130,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // OTP
     const otpForm = document.getElementById("otpForm");
     if (otpForm) {
-        const flow = document.getElementById("flow")?.value || localStorage.getItem("flow");
+        const flow = localStorage.getItem("flow") || "";
 
         otpForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -333,4 +343,203 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     });
+
+    // Boton de editar (Admin)
+    window.editar = function(id)
+    {
+        document.getElementById('view' + id).style.display = 'none';
+        document.getElementById('edit' + id).style.display = 'table-row';
+    }
+
+    // Boton de cancelar (Admin)
+    window.cancelar = function(id)
+    {
+        document.getElementById('view' + id).style.display = 'table-row';
+        document.getElementById('edit' + id).style.display = 'none';
+    }
+
+    // Crear user (Admin)
+    window.crearUsuario = function()
+    {
+        let fila = document.getElementById('createRow');
+
+        if(fila){
+            fila.style.display = 'table-row';
+        }
+    }
+
+    // Cancelar creacion de user (Admin)
+    window.cancelarCrear = function()
+    {
+        let fila = document.getElementById('createRow');
+
+        if(fila){
+            fila.style.display = 'none';
+        }
+    }
+
+    // Forgot Password
+    const forgotForm = document.getElementById("forgotForm");
+
+    if (forgotForm) {
+        forgotForm.addEventListener("submit", () => {
+
+            localStorage.removeItem("flow");
+            localStorage.setItem("flow", "reset");
+
+            const email = forgotForm.querySelector("[name='usuario']").value;
+            localStorage.setItem("email", email);
+        });
+    }
+
+    // Buscador (Admin)
+    const buscadorAdmin = document.getElementById("buscarUsuario");
+
+    if (buscadorAdmin) {
+        buscadorAdmin.addEventListener("input", function () {
+
+            let texto = this.value.toLowerCase();
+            let filas = document.querySelectorAll(".fila-usuario");
+
+            filas.forEach(fila => {
+                let contenido = fila.innerText.toLowerCase();
+
+                if (contenido.includes(texto)) {
+                    fila.style.display = "";
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+
+        });
+    }
+
+    let resultadosBusqueda = [];
+    let indiceBusqueda = -1;
+
+    window.toggleBuscadorNavbar = function () {
+        const input = document.getElementById("globalSearch");
+        const up = document.getElementById("btnUpSearch");
+        const down = document.getElementById("btnDownSearch");
+
+        if (!input) return;
+
+        if (input.style.display === "none" || input.style.display === "") {
+            input.style.display = "inline-block";
+
+            if (up) up.style.display = "inline-block";
+            if (down) down.style.display = "inline-block";
+            input.focus();
+        } else {
+            input.style.display = "none";
+
+            if (up) up.style.display = "none";
+            if (down) down.style.display = "none";
+
+            input.value = "";
+            limpiarMarcadosBusqueda();
+        }
+    };
+
+    const buscadorGlobal = document.getElementById("globalSearch");
+
+    if (buscadorGlobal) {
+
+        buscadorGlobal.addEventListener("input", function () {
+            ejecutarBusquedaGlobal(this.value.trim());
+        });
+
+        buscadorGlobal.addEventListener("keydown", function (e) {
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                moverBusqueda(1);
+            }
+
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                moverBusqueda(-1);
+            }
+        });
+    }
+
+    function limpiarMarcadosBusqueda() {
+
+        document.querySelectorAll(".resultado-busqueda").forEach(el => {
+            el.classList.remove("resultado-busqueda");
+        });
+
+        document.querySelectorAll(".resultado-activo").forEach(el => {
+            el.classList.remove("resultado-activo");
+        });
+
+        resultadosBusqueda = [];
+        indiceBusqueda = -1;
+    }
+
+    function ejecutarBusquedaGlobal(texto) {
+
+        limpiarMarcadosBusqueda();
+
+        if (texto === "") return;
+
+        let elementos = document.querySelectorAll(
+            "body *:not(nav *):not(.fixed-top *):not(.nav-links *):not(.container_logo *)"
+        );
+
+        elementos.forEach(el => {
+
+            if (el.children.length > 0) return;
+            if (!el.innerText) return;
+
+            let contenido = el.innerText.trim().toLowerCase();
+
+            if (contenido.includes(texto.toLowerCase())) {
+                el.classList.add("resultado-busqueda");
+                resultadosBusqueda.push(el);
+            }
+        });
+
+        if (resultadosBusqueda.length > 0) {
+            indiceBusqueda = 0;
+            enfocarResultado();
+        }
+    }
+
+    function moverBusqueda(direccion) {
+
+        if (resultadosBusqueda.length === 0) return;
+
+        indiceBusqueda += direccion;
+
+        if (indiceBusqueda >= resultadosBusqueda.length) {
+            indiceBusqueda = 0;
+        }
+
+        if (indiceBusqueda < 0) {
+            indiceBusqueda = resultadosBusqueda.length - 1;
+        }
+
+        enfocarResultado();
+    }
+
+    window.moverBusqueda = moverBusqueda;
+
+    function enfocarResultado() {
+
+        document.querySelectorAll(".resultado-activo").forEach(el => {
+            el.classList.remove("resultado-activo");
+        });
+
+        const actual = resultadosBusqueda[indiceBusqueda];
+
+        if (!actual) return;
+
+        actual.classList.add("resultado-activo");
+
+        actual.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
 });

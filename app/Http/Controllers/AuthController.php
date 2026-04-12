@@ -12,52 +12,63 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Autentica al usuario con usuario y contraseña
         $user = User::where('usuario', $request->email)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            // Obtiene el usuario autenticado
-            $user = User::where('usuario', $request->email)->first();
-
-            // Genera la OTP de 6 dígitos
-            $otp = rand(100000, 999999);
-
-            // Guarda OTP y tiempo de expiración
-            $user->otp = $otp;
-            $user->otp_expires_at = now()->addMinutes(5);
-            $user->save();
-
-            // Guardar usuario temporal en sesión
-            session([
-                'otp_user_id' => $user->id
-            ]);
-
-            session()->save();
-
-            try {
-                // Envía el OTP al correo
-                Mail::raw("Tu código de verificación es: $otp", function ($message) use ($request) {
-                    $message->to($request->email)
-                            ->subject('Código de verificación');
-                });
-            } catch (\Exception $e) {
-                // Manejo de error si falla el envío de correo
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al enviar correo: ' . $e->getMessage()
-                ]);
-            }
-
+        // Usuario no existe
+        if (!$user) {
             return response()->json([
-                'success' => true,
-                'email' => $request->email
+                'success' => false,
+                'message' => 'Credenciales incorrectas'
             ]);
         }
 
-        // Credenciales incorrectas
+        // Cuenta desactivada
+        if ($user->activo == 0) {
+            return response()->json([
+                'success' => false,
+                'disabled' => true,
+                'message' => 'Cuenta desactivada'
+            ]);
+        }
+
+        // Password incorrecta
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Credenciales incorrectas'
+            ]);
+        }
+
+        // OTP login normal
+        $otp = rand(100000, 999999);
+
+        $user->otp = $otp;
+        $user->otp_expires_at = now()->addMinutes(5);
+        $user->save();
+
+        session([
+            'otp_user_id' => $user->id
+        ]);
+
+        session()->save();
+
+        try {
+            Mail::raw("Tu código de verificación es: $otp", function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Código de verificación');
+            });
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar correo'
+            ]);
+        }
+
         return response()->json([
-            'success' => false,
-            'message' => 'Credenciales incorrectas'
+            'success' => true,
+            'email' => $request->email
         ]);
     }
 
@@ -154,11 +165,6 @@ class AuthController extends Controller
 
     public function showForgot()
     {
-        // Solo limpiar si NO viene de OTP verificado
-        if (!session('otp_verified')) {
-            session()->forget(['reset_user_id', 'reset_email']);
-        }
-
         return view('forget_password');
     }
 
@@ -273,6 +279,7 @@ class AuthController extends Controller
 
         // Cambiar solo al usuario selecionado
         $user->password = Hash::make($request->password);
+        $user->activo = 1;
         // Limpia la OTP
         $user->otp = null;
         $user->otp_expires_at = null;
@@ -292,19 +299,42 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'usuario' => 'required|email|unique:users,usuario',
+            'usuario' => 'required|email',
             'password' => 'required|min:6'
         ]);
 
+        $existente = User::where('usuario', $request->usuario)->first();
+
+        if ($existente) {
+            // Si está desactivado mandar a reactivar
+            if ($existente->activo == 0) {
+
+                session([
+                    'reset_user_id' => $existente->id,
+                    'reset_email' => $existente->usuario,
+                    'otp_verified' => false
+                ]);
+
+                session()->save();
+
+                return redirect('/forgot-password')
+                    ->with('success', 'Tu cuenta estaba desactivada. Reactívala cambiando tu contraseña.');
+            }
+
+            return back()->withErrors([
+                'error' => 'Ese correo ya está registrado'
+            ]);
+        }
+
         $otp = rand(100000, 999999);
 
-        // Guardar usuario directamente en BD
-        $user = User::create([
+        User::create([
             'usuario' => $request->usuario,
             'password' => Hash::make($request->password),
             'otp' => $otp,
             'otp_expires_at' => now()->addMinutes(5),
-            'is_verified' => 0
+            'is_verified' => 0,
+            'activo' => 1
         ]);
 
         // Enviar OTP
