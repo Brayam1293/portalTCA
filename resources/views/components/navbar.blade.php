@@ -17,14 +17,24 @@
 
 
   <ul class="nav-links">
-    <li><a href="{{ request()->is('/') ? '#Inicio' : route('home') }}" class="nav_link">Inicio</a></li>
-    <li><a href="{{ request()->is('/') ? '#Sobre-TCA' : route('home') . '#Sobre-TCA' }}" class="nav_link">Sobre TCA</a></li>
+    <li><a href="{{ request()->is('/') ? '#inicio' : route('home') }}" class="nav_link">Inicio</a></li>
+    <li><a href="{{ request()->is('/') ? '#abouttca' : route('home') . '#abouttca' }}" class="nav_link">Sobre TCA</a></li>
     <li><a href="" class="nav_link fz">Test</a></li>
     <li><a href="{{ route('foro') }}" class="nav_link">Foro</a></li>
-    <li><a href="{{ request()->is('/') ? '#Tipos' : route('home') . '#Tipos' }}" class="nav_link">Tipos</a></li>
-        <li><a href="{{ request()->is('/') ? '#Síntomas' : route('home') . '#Síntomas' }}" class="nav_link">Síntomas</a></li>
-    <li>
-      
+    <li><a href="{{ request()->is('/') ? '#tipos' : route('home') . '#tipos' }}" class="nav_link">Tipos</a></li>
+        <li><a href="{{ request()->is('/') ? '#sintomas' : route('home') . '#sintomas' }}" class="nav_link">Síntomas</a></li>
+    <li class="nav-search-box">
+      <a class="search" href="javascript:void(0);" onclick="toggleBuscadorNavbar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6A7282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21 21-4.34-4.34"/>
+          <circle cx="11" cy="11" r="8"/>
+        </svg>
+      </a>
+
+      <input type="text" id="globalSearch" placeholder="Buscar..." style="display:none;">
+      <button id="btnUpSearch" style="display:none;" type="button" onclick="moverBusqueda(-1)">▲</button>
+      <button id="btnDownSearch" style="display:none;" type="button" onclick="moverBusqueda(1)">▼</button>
+    </li>
       @auth
       <form action="/logout" method="POST" style="display:inline;">
           @csrf
@@ -32,21 +42,37 @@
       </form>
       @endauth
     <li>
-      <a class="login"  href="{{ route('login') }}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A7282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user">
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-        </svg>
-        <span class="login-text"></span>
-      </a>
+      @guest
+        <a class="login" href="{{ route('login') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A7282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Entrar
+        </a>
+      @endguest
+
+      @auth
+        @if(auth()->user()->tipo_usuario == 1)
+          <a class="login" href="/admin">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A7282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            Admin
+          </a>
+        @endif
+      @endauth
     </li>
     <li>
-      <a class="help" href= "{{ request()->is('/') ? '#Ayuda' : route('home') . '#Ayuda' }}">
+      <a class="help" href= "#">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#183133" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-icon lucide-phone">
           <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>
         </svg>  
-        Ayuda
+      Ayuda
       </a>
     </li>
   </ul>
+
+</nav>
+
 
 </nav>
