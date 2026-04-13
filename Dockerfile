@@ -29,6 +29,9 @@ RUN chown -R www-data:www-data /var/www/html \
 
 COPY nginx.conf /etc/nginx/sites-available/default
 
+RUN rm -f /etc/nginx/sites-enabled/default
+RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
 EXPOSE 80
 
-CMD sh -c "php-fpm -D && nginx -g 'daemon off;'"
+CMD ["sh", "-c", "php-fpm -D; nginx -g 'daemon off;'"]
