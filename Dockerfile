@@ -9,9 +9,6 @@ RUN a2enmod mpm_prefork
 # Activar mod_rewrite
 RUN a2enmod rewrite
 
-RUN php artisan config:clear
-RUN php artisan cache:clear
-
 # Cambiar el DocumentRoot a /public
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
